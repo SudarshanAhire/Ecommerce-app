@@ -7,12 +7,32 @@ import api from "../services/api";
 const HOME_PRODUCTS_KEY = "shophub-home-products";
 const HOME_CATEGORIES_KEY = "shophub-home-categories";
 
+const normalizeArray = (value) => {
+  if (Array.isArray(value)) return value;
+
+  if (value && typeof value === "object") {
+    if (Array.isArray(value.categories)) return value.categories;
+    if (Array.isArray(value.data)) return value.data;
+    if (Array.isArray(value.items)) return value.items;
+  }
+
+  if (typeof value === "string") {
+    try {
+      return normalizeArray(JSON.parse(value));
+    } catch {
+      return [];
+    }
+  }
+
+  return [];
+};
+
 const getStoredCatalog = (key) => {
   if (typeof window === "undefined") return [];
 
   try {
     const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) : [];
+    return normalizeArray(value ? JSON.parse(value) : []);
   } catch {
     return [];
   }
@@ -26,8 +46,8 @@ function Home() {
     const loadData = async () => {
       try {
         const [productsRes, categoriesRes] = await Promise.all([api.get("/products"), api.get("/categories")]);
-        const nextProducts = (productsRes.data.products || []).slice(0, 12);
-        const nextCategories = categoriesRes.data || [];
+        const nextProducts = normalizeArray(productsRes?.data?.products ?? productsRes?.data?.data ?? productsRes?.data).slice(0, 12);
+        const nextCategories = normalizeArray(categoriesRes?.data?.categories ?? categoriesRes?.data?.data ?? categoriesRes?.data);
 
         setProducts(nextProducts);
         setCategories(nextCategories);
@@ -35,6 +55,8 @@ function Home() {
         localStorage.setItem(HOME_CATEGORIES_KEY, JSON.stringify(nextCategories));
       } catch (error) {
         console.error(error);
+        setProducts([]);
+        setCategories([]);
       }
     };
 
@@ -52,7 +74,7 @@ function Home() {
         </div>
 
         <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-          {categories.map((category) => (
+          {Array.isArray(categories) && categories.map((category) => (
             <CategoryCard key={category._id} category={category} />
           ))}
         </div>
@@ -65,7 +87,7 @@ function Home() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((product) => (
+          {Array.isArray(products) && products.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>
