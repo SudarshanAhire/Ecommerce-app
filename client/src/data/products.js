@@ -24,24 +24,17 @@ const products = [
     image: "https://picsum.photos/300?8",
   },
   {
+    id: 5,
+    title: "MacBook Air M3",
+    price: 114999,
+    image: "https://picsum.photos/300?9",
+  },
+  {
     id: 6,
-    title: "Sony Headphones",
-    price: 12999,
-    image: src="/assets/image.png",
-  },
-  {
-    id: 49,
-    title: "Sony Headphones",
-    price: 12999,
-    image: "https://picsum.photos/300?8",
-  },
-  {
-    id: 4,
-    title: "Sony Headphones",
-    price: 12999,
-    image: "https://picsum.photos/300?8",
+    title: "JBL Bluetooth Speaker",
+    price: 4999,
+    image: "https://picsum.photos/300?10",
   },
 ];
 
 export default products;
-

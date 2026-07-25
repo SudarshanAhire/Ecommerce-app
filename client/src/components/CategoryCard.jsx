@@ -1,13 +1,33 @@
-function CategoryCard({ category }) {
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+
+export default function CategoryCard({ category }) {
   return (
-    <div className="cursor-pointer overflow-hidden rounded-3xl border border-slate-200 bg-white/90 shadow-[0_10px_30px_rgba(15,23,42,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(37,99,235,0.18)] dark:border-slate-800 dark:bg-slate-900/80 dark:shadow-[0_12px_30px_rgba(2,6,23,0.45)]">
-      <img src={category.image || "https://picsum.photos/300?10"} alt={category.name} className="h-44 w-full object-cover" />
-      <div className="p-4">
-        <h2 className="text-center text-lg font-semibold text-slate-900 dark:text-slate-100">{category.name}</h2>
-        <p className="mt-2 text-center text-sm text-slate-500 dark:text-slate-300">{category.description || "Fresh picks for every need"}</p>
-      </div>
-    </div>
+    <motion.div
+      whileHover={{ y: -4 }}
+      className="group bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden"
+    >
+      <Link to="/shop" className="block w-full h-full">
+        <div className="relative overflow-hidden h-48">
+          <img
+            src={category.image || 'https://via.placeholder.com/400x300'}
+            alt={category.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+          <div className="absolute bottom-4 left-4 right-4">
+            <h3 className="text-white font-bold text-xl tracking-wide">{category.name}</h3>
+          </div>
+        </div>
+        {category.description && (
+          <div className="p-4 bg-white dark:bg-gray-800">
+            <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-2">
+              {category.description}
+            </p>
+          </div>
+        )}
+      </Link>
+    </motion.div>
   );
 }
-
-export default CategoryCard;
